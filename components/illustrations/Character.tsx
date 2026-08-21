@@ -20,7 +20,7 @@ export function Character({ variant = 'idle', className = '', interactive = fals
 
   return (
     <svg className={`character character-${variant} ${interactive ? 'character-interactive' : ''} ${className}`} style={poses[variant]} data-character data-character-variant={variant} viewBox="0 0 360 470" role="img" aria-labelledby={titleId}>
-      <title id={titleId}>Illustrated Jitesh Sen, a friendly software engineer {isPhone ? 'holding a phone' : isReading ? 'reading' : isBuilding ? 'building software' : 'exploring an idea'}</title>
+      <title id={titleId}>{`Illustrated Jitesh Sen, a friendly software engineer ${isPhone ? 'holding a phone' : isReading ? 'reading' : isBuilding ? 'building software' : 'exploring an idea'}`}</title>
       <g id="character" data-character-part="character">
         <ellipse id="shadow" data-character-part="shadow" cx="175" cy="444" rx="102" ry="15" className="character-shadow" />
         <g id="legs" data-character-part="legs"><path id="left-leg" data-character-part="left-leg" d="M110 350 Q72 363 62 414" className="character-limb" /><path id="right-leg" data-character-part="right-leg" d="M236 349 Q277 363 292 414" className="character-limb" /><path id="left-foot" data-character-part="left-foot" d="M63 409 Q74 398 93 414 L83 437 Q62 442 50 426Z" className="character-shoe" /><path id="right-foot" data-character-part="right-foot" d="M280 410 Q300 398 316 415 L305 438 Q282 441 271 425Z" className="character-shoe" /></g>

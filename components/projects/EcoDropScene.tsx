@@ -3,6 +3,9 @@
 import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 export function EcoDropScene() {
   const root = useRef<HTMLElement>(null)
@@ -10,10 +13,12 @@ export function EcoDropScene() {
     const mm = gsap.matchMedia()
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
-        gsap.from('.ecodrop-scene .scene-copy > *', { y: 20, opacity: 0, duration: .65, stagger: .08, scrollTrigger: { trigger: root.current, start: 'top 75%' } })
-        gsap.from('.network .device', { scale: .72, opacity: 0, duration: .65, stagger: .16, ease: 'back.out(1.5)', scrollTrigger: { trigger: root.current, start: 'top 70%' } })
-        gsap.from('.network .connection-line', { scaleX: 0, duration: .8, stagger: .2, transformOrigin: 'left center', scrollTrigger: { trigger: root.current, start: 'top 70%' } })
-        gsap.to('.message-packet', { x: 112, y: -48, duration: 1.4, repeat: -1, yoyo: true, ease: 'sine.inOut' })
+        const q = gsap.utils.selector(root.current!)
+        const tl = gsap.timeline({ scrollTrigger: { trigger: root.current, start: 'top 72%', end: 'bottom 35%', scrub: 0.7 } })
+        tl.from(q('.device'), { scale: .72, opacity: 0, duration: .4, stagger: .12, ease: 'back.out(1.5)' })
+          .from(q('.connection-line-svg'), { strokeDashoffset: 80, duration: .45 }, '-=.2')
+          .from(q('.scene-copy > *'), { y: 20, opacity: 0, duration: .35, stagger: .04 }, '-=.25')
+        gsap.to(q('.message-packet'), { x: 112, y: -48, duration: 1.4, repeat: -1, yoyo: true, ease: 'sine.inOut' })
       }, root)
       return () => ctx.revert()
     })
