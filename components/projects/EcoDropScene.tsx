@@ -14,10 +14,12 @@ export function EcoDropScene() {
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const ctx = gsap.context(() => {
         const q = gsap.utils.selector(root.current!)
+        gsap.from(q('.scene-copy > *'), { y: 20, opacity: 0, duration: .5, stagger: .06, ease: 'power3.out', scrollTrigger: { trigger: root.current, start: 'top 75%', once: true } })
+        const line = q('.connection-line-svg')[0] as SVGPathElement
+        const len = line.getTotalLength()
         const tl = gsap.timeline({ scrollTrigger: { trigger: root.current, start: 'top 72%', end: 'bottom 35%', scrub: 0.7 } })
         tl.from(q('.device'), { scale: .72, opacity: 0, duration: .4, stagger: .12, ease: 'back.out(1.5)' })
-          .from(q('.connection-line-svg'), { strokeDashoffset: 80, duration: .45 }, '-=.2')
-          .from(q('.scene-copy > *'), { y: 20, opacity: 0, duration: .35, stagger: .04 }, '-=.25')
+          .fromTo(line, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: .45 }, '-=.2')
         gsap.to(q('.message-packet'), { x: 112, y: -48, duration: 1.4, repeat: -1, yoyo: true, ease: 'sine.inOut' })
       }, root)
       return () => ctx.revert()
