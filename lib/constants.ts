@@ -1,6 +1,6 @@
 export const site = {
   name: 'Jitesh Sen',
-  role: 'Computer Science Engineer · Software Developer',
-  description: "An illustrated portfolio about turning problems into things people can use.",
+  role: 'Software Engineer',
+  description: 'I build software around real constraints — backend systems, full-stack products, and mobile applications.',
   nav: ['Projects', 'Story', 'Experience', 'Toolbox', 'About', 'Contact'],
 } as const

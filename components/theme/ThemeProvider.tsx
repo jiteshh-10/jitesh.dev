@@ -21,6 +21,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const nextTheme = saved === 'dark' || saved === 'light' ? saved : getSystemTheme()
     setTheme(nextTheme)
     document.documentElement.dataset.theme = nextTheme
+    document.documentElement.style.colorScheme = nextTheme
   }, [])
 
   const toggleTheme = useCallback((origin?: { x: number; y: number }) => {
@@ -28,6 +29,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const apply = () => {
       document.documentElement.dataset.theme = nextTheme
+      document.documentElement.style.colorScheme = nextTheme
       setTheme(nextTheme)
       window.localStorage.setItem(STORAGE_KEY, nextTheme)
     }
@@ -59,5 +61,5 @@ export function useTheme() {
 }
 
 export function ThemeScript() {
-  return <Script id="theme-preload" strategy="beforeInteractive">{`(() => { try { const key = '${STORAGE_KEY}'; const saved = localStorage.getItem(key); const theme = saved === 'dark' || saved === 'light' ? saved : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); document.documentElement.dataset.theme = theme; } catch {} })()`}</Script>
+  return <Script id="theme-preload" strategy="beforeInteractive">{`(() => { try { const key = '${STORAGE_KEY}'; const saved = localStorage.getItem(key); const theme = saved === 'dark' || saved === 'light' ? saved : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); document.documentElement.dataset.theme = theme; document.documentElement.style.colorScheme = theme; } catch {} })()`}</Script>
 }

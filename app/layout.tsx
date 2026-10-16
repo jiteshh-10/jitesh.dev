@@ -8,8 +8,8 @@ const display = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-disp
 const body = DM_Sans({ subsets: ['latin'], variable: '--font-body' })
 const note = Caveat({ subsets: ['latin'], variable: '--font-note' })
 
-export const metadata: Metadata = { title: 'Jitesh Sen — Software Engineer & Problem Solver', description: 'An illustrated portfolio about turning problems into things people can use.', generator: 'Next.js' }
-export const viewport: Viewport = { colorScheme: 'light', themeColor: '#f5f0e8', userScalable: true }
+export const metadata: Metadata = { title: 'Jitesh Sen — Software Engineer & Problem Solver', description: 'I build software around real constraints — backend systems, full-stack products, and mobile applications.', generator: 'Next.js' }
+export const viewport: Viewport = { colorScheme: 'light dark', themeColor: [{ media: '(prefers-color-scheme: light)', color: '#f7f2e8' }, { media: '(prefers-color-scheme: dark)', color: '#151613' }], userScalable: true }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en" suppressHydrationWarning className={`${display.variable} ${body.variable} ${note.variable}`}>
 <head><ThemeScript /></head><body className="antialiased"><ThemeProvider>{children}</ThemeProvider>{process.env.NODE_ENV === 'production' && <Analytics />}</body></html> }
