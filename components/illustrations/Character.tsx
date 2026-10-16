@@ -11,8 +11,7 @@ const poses: Record<CharacterVariant, CSSProperties> = {
 }
 
 export function Character({ variant = 'idle', className = '', interactive = false }: CharacterProps) {
-  const id = useId().replace(/:/g, '')
-  const titleId = `character-title-${id}`
+  const titleId = 'character-title'
   const isPhone = variant === 'phone'
   const isThinking = variant === 'thinking' || variant === 'exploring'
   const isReading = variant === 'reading'

@@ -7,6 +7,7 @@ export type Project = {
   solution: string
   technologies: string[]
   concepts: string[]
+  engineering: string[]
   status: string
   accent: 'turquoise' | 'purple' | 'yellow' | 'coral'
   github?: string
