@@ -15,3 +15,5 @@ node_modules
 *.tsbuildinfo
 .DS_Store
 verification/
+.vercel
+.env*

@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { projects } from '@/data/portfolio'
+import { MachineLive } from './machine/live'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -72,18 +73,7 @@ export function TechnicalHero() {
         <span className="board-orbit board-orbit-two" aria-hidden="true" />
         <span className="board-scanline" aria-hidden="true" />
         <div className="board-top"><span>sys / 01</span><span>problem → system → outcome</span></div>
-        <svg viewBox="0 0 620 540" role="img" aria-label="Abstract software architecture diagram: an API node connects through a service to a data store, with a user node on the flow" className="architecture-diagram">
-          <path className="diagram-line" d="M90 170 L285 110 L465 185 L350 320 L150 350 Z" />
-          <path className="diagram-line secondary" d="M285 110 L350 320 M465 185 L150 350" />
-          <path className="diagram-line secondary" d="M350 320 L505 420 M150 350 L90 445" />
-          <g className="diagram-node node-api"><circle cx="90" cy="170" r="34" /><text x="90" y="175" textAnchor="middle">API</text></g>
-          <g className="diagram-node node-service"><rect x="235" y="70" width="100" height="80" /><text x="285" y="115" textAnchor="middle">SERVICE</text></g>
-          <g className="diagram-node node-data"><circle cx="465" cy="185" r="42" /><text x="465" y="181" textAnchor="middle">DATA</text><text x="465" y="197" textAnchor="middle">STORE</text></g>
-          <g className="diagram-node node-user"><rect x="105" y="315" width="90" height="70" /><text x="150" y="356" textAnchor="middle">USER</text></g>
-          <g className="diagram-node node-edge"><circle cx="350" cy="320" r="28" /><text x="350" y="325" textAnchor="middle">↗</text></g>
-          <text className="diagram-note" x="42" y="468">constraints are part of the design</text>
-          <text className="diagram-label" x="418" y="452">build / test / improve</text>
-        </svg>
+        <MachineLive />
         <div className="board-projects">{projects.map((project, index) => <span key={project.slug}><b>0{index + 1}</b> {project.name}</span>)}</div>
       </div>
     </section>

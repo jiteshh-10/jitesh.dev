@@ -886,6 +886,47 @@ h1 span { display: block; }
 }
 
 /* ==========================================================================
+   13b. ANATOMY FIGURE — brand-scoped tokens
+   ========================================================================== */
+.iso-figure, .iso-plate {
+  --anatomy-page: var(--page-bg);
+  --anatomy-card: var(--surface);
+  --anatomy-text: var(--ink-soft);
+  --anatomy-strong: var(--ink);
+  --anatomy-muted: var(--muted);
+  --anatomy-paper: var(--surface);
+  --anatomy-face: var(--surface-2);
+  --anatomy-top: var(--surface-2);
+  --anatomy-shade-0: color-mix(in oklch, var(--surface) 88%, black);
+  --anatomy-shade-1: color-mix(in oklch, var(--surface) 92%, black);
+  --anatomy-shade-2: color-mix(in oklch, var(--surface) 96%, black);
+  --anatomy-shade-3: var(--surface);
+  --anatomy-lit-top: var(--coral-soft);
+  --anatomy-lit-shade: var(--coral);
+  --anatomy-hi: var(--ink);
+  --anatomy-mid: var(--ink-soft);
+  --anatomy-lo: var(--line-strong);
+  --anatomy-faint: var(--line);
+  --anatomy-lit: var(--coral);
+  --anatomy-halo: var(--page-bg);
+  --anatomy-halo-opacity: .85;
+  --anatomy-dot: var(--ink);
+  --anatomy-weight: .6px;
+  --anatomy-ease: cubic-bezier(.32, .72, 0, 1);
+  --anatomy-mono: var(--font-mono, ui-monospace, monospace);
+}
+html[data-theme="light"] .iso-figure, html[data-theme="light"] .iso-plate {
+  --anatomy-shade-0: color-mix(in oklch, var(--surface) 94%, white);
+  --anatomy-shade-1: color-mix(in oklch, var(--surface) 97%, white);
+  --anatomy-shade-2: var(--surface);
+  --anatomy-shade-3: color-mix(in oklch, var(--surface) 103%, white);
+  --anatomy-lit: var(--coral);
+}
+.technical-board .iso-figure { margin: 0; }
+.technical-board .iso-plate { border: 0; background: transparent; padding: 0; }
+html.lenis { scroll-behavior: auto; }
+
+/* ==========================================================================
    14. REDUCED MOTION — readable, calm, and complete
    ========================================================================== */
 
