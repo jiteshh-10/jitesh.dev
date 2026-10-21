@@ -14,17 +14,24 @@ export function EditorialSections() {
   useGSAP(() => {
     if (!root.current) return
     const cleanup: Array<() => void> = []
-    const media = gsap.matchMedia()
-    media.add('(prefers-reduced-motion: no-preference)', () => {
-      createSectionReveal(root.current!)
-      createRuleSweep(root.current!)
-      createProgressBar(root.current!)
-      if (story.current) cleanup.push(createStoryProgress(story.current))
-    })
+    /* Reveals and progress run in every motion mode; the helpers themselves
+       drop the travel when the visitor asks for reduced motion. */
+    createSectionReveal(root.current!)
+    createRuleSweep(root.current!)
+    createProgressBar(root.current!)
+    if (story.current) cleanup.push(createStoryProgress(story.current))
+    const expLine = root.current!.querySelector<HTMLElement>('[data-experience-line]')
+    if (expLine) {
+      const tween = gsap.fromTo(expLine, { scaleY: 0, transformOrigin: 'top center' }, {
+        scaleY: 1, ease: 'none',
+        scrollTrigger: { trigger: expLine.parentElement!, start: 'top 80%', end: 'bottom 20%', scrub: 0.6 },
+        immediateRender: false,
+      })
+      cleanup.push(() => tween.kill())
+    }
     /* Accordions animate always, but stay instant under reduced motion */
     cleanup.push(createAccordions(root.current!))
     return () => {
-      media.revert()
       cleanup.forEach((fn) => fn())
     }
   }, { scope: root })
@@ -85,6 +92,7 @@ export function EditorialSections() {
           <span className="section-rule" data-sweep aria-hidden="true" />
         </div>
         <div className="experience-list">
+          <div className="experience-line" data-experience-line aria-hidden="true" />
           {experience.map((item) => (
             <article className="experience-item" key={item.company} data-reveal>
               <div className="experience-period-row">

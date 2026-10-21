@@ -3,19 +3,27 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-/* Section scaffolding: everything inside [data-reveal-section] enters as it scrolls into view. */
+/* Section scaffolding: everything inside [data-reveal-section] enters as it
+   scrolls into view. Reduced motion keeps the reveal but drops the travel:
+   content still arrives, it simply does not move. */
 export function createSectionReveal(root: HTMLElement) {
   const targets = gsap.utils.toArray<HTMLElement>('[data-reveal]', root)
+  const calm = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
   if (targets.length) {
-    targets.forEach((target) => gsap.fromTo(target, { y: 60, autoAlpha: 0, scale: 0.985 }, {
-      y: 0,
-      autoAlpha: 1,
-      scale: 1,
-      duration: 1.0,
-      ease: 'power3.out',
-      scrollTrigger: { trigger: target, start: 'top 84%', once: true },
-      immediateRender: false,
-    }))
+    targets.forEach((target) => gsap.fromTo(target,
+      calm() ? { autoAlpha: 0 } : { y: 60, autoAlpha: 0, scale: 0.985 },
+      {
+        y: 0,
+        autoAlpha: 1,
+        scale: 1,
+        duration: calm() ? 0.5 : 1.0,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: target, start: 'top 84%', once: true },
+        immediateRender: false,
+        /* Settle to a clean final state: no leftover inline opacity/transform that
+           could stack with other layers or survive a theme change. */
+        onComplete: () => gsap.set(target, { clearProps: 'transform,opacity,visibility' }),
+      }))
   }
   return []
 }

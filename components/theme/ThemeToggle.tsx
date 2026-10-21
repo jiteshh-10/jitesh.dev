@@ -20,6 +20,7 @@ export function ThemeToggle() {
     >
       <span className="sr-only">Switch to {nextTheme} mode</span>
       <span className="theme-toggle-icon" aria-hidden="true">{theme === 'dark' ? <Moon /> : <Sun />}</span>
+      <span className="theme-toggle-label" aria-hidden="true">{theme === 'dark' ? 'Light' : 'Dark'}</span>
     </button>
   )
 }

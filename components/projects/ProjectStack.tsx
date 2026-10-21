@@ -21,9 +21,12 @@ type ProjectStackProps = { projects: Project[] }
  * On narrow viewports / reduced motion everything falls back to normal flow.
  */
 
-const HOLD = 1.0
-const EXIT = 0.42
-const ENTER = 0.62
+const HOLD = 0.9
+const EXIT = 0.38
+const ENTER = 0.55
+/** Scroll distance granted to one project, in px. Keeps the pinned band tight
+ *  so the section never reads as a long empty region. */
+const PER_PROJECT = 330
 
 function buildEnter(card: HTMLElement) {
   const q = gsap.utils.selector(card)
@@ -63,6 +66,11 @@ function ProjectCaseStudy({ project, index, active }: { project: Project; index:
         <h3 className="project-name mask"><span data-mask>{project.name}</span></h3>
         <p className="project-tagline mask"><span data-mask>{project.headline}</span></p>
         <p className="project-description" data-fade>{project.description}</p>
+      </div>
+      <div data-media>
+        <ProjectMedia project={project} index={index} active={active} />
+      </div>
+      <div className="project-detail">
         <div className="engineering-list" data-fade>
           <strong>Engineering</strong>
           <ul>{project.engineering.map((item) => <li data-stagger key={item}>{item}</li>)}</ul>
@@ -72,9 +80,6 @@ function ProjectCaseStudy({ project, index, active }: { project: Project; index:
           {project.github && <a className="text-link" href={project.github} target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>}
           {project.liveUrl && <a className="text-link" href={project.liveUrl} target="_blank" rel="noreferrer">Live demo <span aria-hidden="true">↗</span></a>}
         </div>
-      </div>
-      <div data-media>
-        <ProjectMedia project={project} index={index} active={active} />
       </div>
     </article>
   )
@@ -92,7 +97,10 @@ export function ProjectStack({ projects }: ProjectStackProps) {
     if (!stage || !cards.length) return
 
     const media = gsap.matchMedia()
-    media.add('(prefers-reduced-motion: no-preference) and (min-width: 801px)', () => {
+    /* The cinematic pinned stage needs a normal-height viewport. On very tall
+       viewports (or full-page captures) the pin would leave a long empty band,
+       so the four projects stay in normal document flow instead. */
+    media.add('(prefers-reduced-motion: no-preference) and (min-width: 1120px) and (max-height: 1700px)', () => {
       /* React's is-active class owns container visibility/pointer-events; GSAP animates children only. */
 
       /* Master timeline: hold → exit → enter → hold … */
@@ -114,10 +122,15 @@ export function ProjectStack({ projects }: ProjectStackProps) {
 
       const total = position
 
+      /* Mark the stage as pinned only while the cinematic sequence is in charge.
+         Without it (no JS, reduced motion, narrow or very tall viewports) the
+         four projects stay in normal document flow and remain readable. */
+      stage.classList.add('is-pinned')
+
       ScrollTrigger.create({
         trigger: section,
         start: 'top top+=88',
-        end: () => `+=${Math.round(total * 520)}`,
+        end: () => `+=${Math.round(total * PER_PROJECT)}`,
         pin: stage,
         pinSpacing: true,
         anticipatePin: 1,
@@ -135,7 +148,26 @@ export function ProjectStack({ projects }: ProjectStackProps) {
       setActiveIndex(0)
       return () => {
         master.kill()
+        stage.classList.remove('is-pinned')
       }
+    })
+
+    /* Flow mode (narrow, tall, reduced motion, or no JS): the four projects
+       read as one continuous story. The index still tracks the project the
+       reader is on, so the progress indicator stays truthful. */
+    media.add('(prefers-reduced-motion: reduce), (max-width: 1119px), (min-height: 1701px)', () => {
+      const triggers: ScrollTrigger[] = []
+      cards.forEach((card, index) => {
+        triggers.push(ScrollTrigger.create({
+          trigger: card,
+          start: 'top 60%',
+          end: 'bottom 60%',
+          onToggle: (self) => {
+            if (self.isActive) setActiveIndex(index)
+          },
+        }))
+      })
+      return () => triggers.forEach((trigger) => trigger.kill())
     })
     return () => media.revert()
   }, { scope: root, dependencies: [projects.length] })
@@ -153,9 +185,6 @@ export function ProjectStack({ projects }: ProjectStackProps) {
       </div>
       <div className="project-stage" aria-live="polite">
         {projects.map((project, index) => <ProjectCaseStudy project={project} index={index} active={index === activeIndex} key={project.slug} />)}
-      </div>
-      <div className="project-mobile-cards">
-        {projects.map((project, index) => <ProjectCaseStudy project={project} index={index} active key={project.slug} />)}
       </div>
     </div>
   )

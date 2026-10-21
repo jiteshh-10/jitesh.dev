@@ -195,13 +195,29 @@ try {
   await mobile.goto(BASE, { waitUntil: 'networkidle0', timeout: 45000 })
   await new Promise((r) => setTimeout(r, 1000))
 
-  const mob = await mobile.evaluate(() => ({
-    stageHidden: getComputedStyle(document.querySelector('.project-stage')).display === 'none',
-    flowCards: [...document.querySelectorAll('.project-mobile-cards .project-case-study')].length,
-    menuBtn: !!document.querySelector('.menu-button'),
-    navHidden: getComputedStyle(document.querySelector('.desktop-nav')).display === 'none',
-  }))
-  check('mobile: flow cards replace pinned stage', mob.stageHidden && mob.flowCards === 4 && mob.menuBtn && mob.navHidden, JSON.stringify(mob))
+  const mob = await mobile.evaluate(() => {
+    const stage = document.querySelector('.project-stage')
+    const cards = [...document.querySelectorAll('.project-stage .project-case-study')]
+    const order = cards.map((el) => el.querySelector('.project-name [data-mask]')?.textContent?.trim())
+    const visible = cards.filter((el) => getComputedStyle(el).visibility === 'visible')
+    /* every project must expose its content in the required vertical order */
+    const sequence = cards.map((card) => {
+      const items = [...card.querySelectorAll('.project-copy-meta, .project-name, .project-tagline, .project-description, [data-media], .engineering-list, .tag-list, .project-links')]
+      return items.map((el) => Math.round(el.getBoundingClientRect().top + window.scrollY))
+    })
+    const ordered = sequence.every((tops) => tops.every((t, i) => i === 0 || t >= tops[i - 1]))
+    return {
+      stageHidden: getComputedStyle(stage).display === 'none',
+      pinned: stage.classList.contains('is-pinned'),
+      cards: cards.length,
+      visible: visible.length,
+      order,
+      ordered,
+      menuBtn: !!document.querySelector('.menu-button'),
+      navHidden: getComputedStyle(document.querySelector('.desktop-nav')).display === 'none',
+    }
+  })
+  check('mobile: four projects in readable flow, correct order', !mob.stageHidden && !mob.pinned && mob.cards === 4 && mob.visible === 4 && mob.ordered && mob.order.join(',') === 'EchoDrop,MinimizUrl,Contexta,Habitualz' && mob.menuBtn && mob.navHidden, JSON.stringify(mob))
 
   /* Mobile menu opens and is usable */
   await mobile.click('.menu-button')
@@ -217,10 +233,17 @@ try {
   await rm.goto(BASE, { waitUntil: 'networkidle0', timeout: 45000 })
   await new Promise((r) => setTimeout(r, 800))
   const rmState = await rm.evaluate(() => {
-    const flow = [...document.querySelectorAll('.project-mobile-cards .project-case-study')].map((el) => getComputedStyle(el).visibility)
-    return { stageHidden: getComputedStyle(document.querySelector('.project-stage')).display === 'none', flowAllVisible: flow.length === 4 && flow.every((v) => v === 'visible') }
+    const stage = document.querySelector('.project-stage')
+    const cards = [...document.querySelectorAll('.project-stage .project-case-study')]
+    const visible = cards.filter((el) => getComputedStyle(el).visibility === 'visible')
+    return {
+      pinned: stage.classList.contains('is-pinned'),
+      cards: cards.length,
+      visible: visible.length,
+      stageHidden: getComputedStyle(stage).display === 'none',
+    }
   })
-  check('reduced motion: projects in readable flow', rmState.stageHidden && rmState.flowAllVisible, JSON.stringify(rmState))
+  check('reduced motion: projects in readable flow', !rmState.stageHidden && !rmState.pinned && rmState.cards === 4 && rmState.visible === 4, JSON.stringify(rmState))
   await rm.screenshot({ path: `${OUT}/reduced-motion-projects.png` })
 } catch (error) {
   check('mobile pass: no fatal error', false, String(error))
