@@ -284,7 +284,7 @@ em { color: var(--coral); font-style: normal; }
 }
 .section-heading h2, .process-section h2, .future-section h2, .contact-section h2 { margin: 18px 0 0; font-size: clamp(3.2rem, 7vw, 7.2rem); line-height: .88; }
 .section-heading > div > p { max-width: 320px; line-height: 1.6; }
-.section-rule { display: block; width: 100%; height: 1px; margin-top: 26px; background: var(--line-strong); transform-origin: left center; }
+.section-rule { display: block; width: 100%; height: 2px; margin-top: 26px; background: linear-gradient(90deg, var(--coral), color-mix(in oklch, var(--coral) 40%, transparent)); border-radius: 2px; transform-origin: left center; box-shadow: 0 0 8px color-mix(in oklch, var(--coral) 25%, transparent); }
 .section-rule-dark { background: color-mix(in srgb, #f5f0e7 26%, transparent); }
 
 .project-gallery, .process-section, .future-section, .contact-section { padding: 128px clamp(20px, 7vw, 110px) 110px; }
@@ -604,7 +604,7 @@ h1 span { display: block; }
 
 /* Contexta */
 .pv-ctx-passage { margin: 0; font-size: 12.5px; line-height: 1.65; color: currentColor; }
-.pv-ctx-word { background: linear-gradient(var(--coral) 0 0) no-repeat 0 100% / 0% 46%; padding: 0 2px; color: inherit; font-weight: 700; animation: pvCtxWord 7s ease-in-out infinite; }
+.pv-ctx-word { background: linear-gradient(var(--coral) 0 0) no-repeat 0 100% / 0% 55%; padding: 0 3px; color: inherit; font-weight: 700; animation: pvCtxWord 6s ease-in-out infinite; text-decoration: none; border-bottom: 1px solid color-mix(in oklch, var(--coral) 40%, transparent); }
 .pv-ctx-card { display: grid; gap: 6px; border: 1px solid currentColor; border-left: 3px solid currentColor; padding: 11px 12px; animation: pvCtxCard 7s ease-in-out infinite; opacity: 0; transform: translateY(10px); }
 .pv-ctx-card strong { font: 700 12px var(--font-display); letter-spacing: -.02em; }
 .pv-ctx-card span { font-size: 10.5px; line-height: 1.5; opacity: .85; }
@@ -924,7 +924,14 @@ html[data-theme="light"] .iso-figure, html[data-theme="light"] .iso-plate {
 }
 .technical-board .iso-figure { margin: 0; }
 .technical-board .iso-plate { border: 0; background: transparent; padding: 0; }
-html.lenis { scroll-behavior: auto; }
+.computer-screen .iso-fill { animation: screenGlow 3.6s ease-in-out infinite; }
+@keyframes screenGlow { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .computer-screen .iso-fill { animation: none; } }
+.desk-computer-frame { width: 100%; height: 470px; border: 0; display: block; border-radius: 8px; overflow: hidden; }
+.desk-stage { position: relative; padding: 24px 12px 12px; border-radius: 16px; background: radial-gradient(120% 80% at 50% 0%, color-mix(in oklch, var(--coral) 12%, transparent), transparent 60%), linear-gradient(180deg, color-mix(in oklch, var(--surface) 60%, transparent), transparent); }
+.desk-glow { position: absolute; inset: -20% -10% auto; height: 60%; background: radial-gradient(60% 50% at 50% 50%, color-mix(in oklch, var(--coral) 18%, transparent), transparent 70%); filter: blur(24px); opacity: .7; animation: deskGlow 6s ease-in-out infinite; pointer-events: none; }
+@keyframes deskGlow { 0%,100% { opacity:.55; } 50% { opacity:.85; } }
+@media (prefers-reduced-motion: reduce) { .desk-glow { animation: none; } }
 
 /* ==========================================================================
    14. REDUCED MOTION — readable, calm, and complete

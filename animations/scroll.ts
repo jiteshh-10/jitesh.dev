@@ -6,17 +6,18 @@ gsap.registerPlugin(ScrollTrigger)
 /* Section scaffolding: everything inside [data-reveal-section] enters as it scrolls into view. */
 export function createSectionReveal(root: HTMLElement) {
   const targets = gsap.utils.toArray<HTMLElement>('[data-reveal]', root)
-  if (!targets.length) return []
-  return targets.map((target, index) => gsap.fromTo(target, { y: 34, autoAlpha: 0 }, {
-    y: 0,
-    autoAlpha: 1,
-    duration: 0.72,
-    delay: (index % 3) * 0.04,
-    ease: 'power3.out',
-    scrollTrigger: { trigger: target, start: 'top 88%', once: true },
-    /* Essential content stays readable even if the animation never fires */
-    immediateRender: false,
-  }))
+  if (targets.length) {
+    targets.forEach((target) => gsap.fromTo(target, { y: 60, autoAlpha: 0, scale: 0.985 }, {
+      y: 0,
+      autoAlpha: 1,
+      scale: 1,
+      duration: 1.0,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: target, start: 'top 84%', once: true },
+      immediateRender: false,
+    }))
+  }
+  return []
 }
 
 /* Thin rules sweep open as sections arrive. */

@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { projects } from '@/data/portfolio'
-import { MachineLive } from './machine/live'
+import { DeskComputerFigure } from './DeskComputerFigure'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -73,7 +73,7 @@ export function TechnicalHero() {
         <span className="board-orbit board-orbit-two" aria-hidden="true" />
         <span className="board-scanline" aria-hidden="true" />
         <div className="board-top"><span>sys / 01</span><span>problem → system → outcome</span></div>
-        <MachineLive />
+        <DeskComputerFigure />
         <div className="board-projects">{projects.map((project, index) => <span key={project.slug}><b>0{index + 1}</b> {project.name}</span>)}</div>
       </div>
     </section>
